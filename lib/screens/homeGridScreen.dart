@@ -15,9 +15,19 @@ class HomeGridScreen extends StatefulWidget {
 class _HomeGridScreenState extends State<HomeGridScreen> {
   var GridStataus = staus.all;
   late List<Temple> templeList;
+  bool isInit = true;
 
   @override
   Widget build(BuildContext context) {
+    @override
+    void didChangeDependencies() {
+      if (isInit) {
+        Provider.of<TempleGrid>(context).fetchData();
+      }
+      isInit = false;
+      super.didChangeDependencies();
+    }
+
     if (GridStataus == staus.all) {
       templeList = Provider.of<TempleGrid>(context).templeList;
     }
