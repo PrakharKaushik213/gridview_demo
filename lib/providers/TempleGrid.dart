@@ -5,14 +5,14 @@ import 'dart:convert';
 
 class TempleGrid with ChangeNotifier {
   List<Temple> _templelist = [
-    // Temple(
-    //     id: '1',
-    //     name: 'Badrinath Temple',
-    //     location: 'Uttarakhand',
-    //     information:
-    //         'Situated close to the Alaknanda River, the abode of Lord Badrinath is located in the Chamoli district of Uttarakhand. This holy shrine of Lord Vishnu is one of the Char Dhams of Hindu religion.It is also one of the four Chota Char Dham pilgrimage sites (comparatively minor pilgrimage sites). The temple is one of the 108 temples dedicated to Lord Vishnu (Divya Desams), which finds its mention in the works of Tamil saints who existed in the 6th to 9th century.The ancient abode of Lord Vishnu can be visited only between the months of April and November because the temple remains closed during the other months due to harsh weather conditions. Two of the most famous festivals related to the temple are –Mata Murti-Ka-Mela – A celebration where Lord Badrinath’s mother is worshipped in the month of September.Badri-Kedar Festival – A celebration in the month of June for 8 days in the temples of Badrinath and Kedarnath. It seeks to educate people on the local traditions of Uttarakhand.',
-    //     imageUrl:
-    //         'https://cdn-cdmoj.nitrocdn.com/aMXvDVbOTxUQVHZUrOLYcprbySihZhas/assets/static/source/blog/wp-content/uploads/2021/03/4a2697e58e178bc05bc324aa8a378b24.Badrinath-Temple-1.jpg'),
+    Temple(
+        id: '1',
+        name: 'Badrinath Temple',
+        location: 'Uttarakhand',
+        information:
+            'Situated close to the Alaknanda River, the abode of Lord Badrinath is located in the Chamoli district of Uttarakhand. This holy shrine of Lord Vishnu is one of the Char Dhams of Hindu religion.It is also one of the four Chota Char Dham pilgrimage sites (comparatively minor pilgrimage sites). The temple is one of the 108 temples dedicated to Lord Vishnu (Divya Desams), which finds its mention in the works of Tamil saints who existed in the 6th to 9th century.The ancient abode of Lord Vishnu can be visited only between the months of April and November because the temple remains closed during the other months due to harsh weather conditions. Two of the most famous festivals related to the temple are –Mata Murti-Ka-Mela – A celebration where Lord Badrinath’s mother is worshipped in the month of September.Badri-Kedar Festival – A celebration in the month of June for 8 days in the temples of Badrinath and Kedarnath. It seeks to educate people on the local traditions of Uttarakhand.',
+        imageUrl:
+            'https://cdn-cdmoj.nitrocdn.com/aMXvDVbOTxUQVHZUrOLYcprbySihZhas/assets/static/source/blog/wp-content/uploads/2021/03/4a2697e58e178bc05bc324aa8a378b24.Badrinath-Temple-1.jpg'),
     // Temple(
     //     id: '2',
     //     name: 'Sun Temple',
@@ -64,15 +64,19 @@ class TempleGrid with ChangeNotifier {
   }
 
   Future<void> fetchData() async {
-    final url =
-        Uri.parse('https://test-001-98b21-default-rtdb.firebaseio.com.json');
+    _templelist = [];
+    final url = Uri.parse(
+        'https://test-001-98b21-default-rtdb.firebaseio.com/temples.json');
     var res = await http.get(url);
+    print(json.decode(res.body));
+
     var response = json.decode(res.body) as Map<String, dynamic>;
+
     response.forEach((uid, data) {
       _templelist.add(Temple(
         id: uid,
         imageUrl: data['imageurl'],
-        information: data['imformation'],
+        information: data['information'],
         location: data['location'],
         name: data['name'],
       ));
