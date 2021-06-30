@@ -16,18 +16,19 @@ class _HomeGridScreenState extends State<HomeGridScreen> {
   var GridStataus = staus.all;
   late List<Temple> templeList;
   bool isInit = true;
+  @override
+  void didChangeDependencies() {
+    print("didchangedependencies firing at start");
+    if (isInit) {
+      Provider.of<TempleGrid>(context).fetchData();
+      isInit = false;
+    }
+
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
-    @override
-    void didChangeDependencies() {
-      if (isInit) {
-        Provider.of<TempleGrid>(context).fetchData();
-      }
-      isInit = false;
-      super.didChangeDependencies();
-    }
-
     if (GridStataus == staus.all) {
       templeList = Provider.of<TempleGrid>(context).templeList;
     }
@@ -71,18 +72,23 @@ class _HomeGridScreenState extends State<HomeGridScreen> {
           },
         ),
       ]),
-      body: GridView.builder(
-          padding: EdgeInsets.all(10),
-          itemCount: templeList.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 1,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 3 / 2),
-          itemBuilder: (ctx, i) {
-            return ChangeNotifierProvider.value(
-                value: templeList[i], child: HomeGridScreenTile(templeList[i]));
-          }),
+      body: RefreshIndicator(
+        onRefresh: () async =>
+            await Provider.of<TempleGrid>(context, listen: false).fetchData(),
+        child: GridView.builder(
+            padding: EdgeInsets.all(10),
+            itemCount: templeList.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 1,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 3 / 2),
+            itemBuilder: (ctx, i) {
+              return ChangeNotifierProvider.value(
+                  value: templeList[i],
+                  child: HomeGridScreenTile(templeList[i]));
+            }),
+      ),
     );
   }
 }
